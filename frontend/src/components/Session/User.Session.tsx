@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
 import type { Dispatch } from 'react'
 import { useMutation } from "../endpoint/Endpoint";
-const gqlSession = `mutation UserSession{
-    
-}` //return object type  here 
+const gqlSession = `mutation UserSession{}` //return object type  here 
 
 type TSession = {
     gql: {

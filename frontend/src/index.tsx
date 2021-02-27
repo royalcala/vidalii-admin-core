@@ -10,10 +10,10 @@ import {
 
 
 //TODO alias
-import Admin from './components/core/Admin';
+import Admin from './components/imports/admin/Admin';
 import { theme } from './theme';
 import UserSession from "./components/Session/User.Session";
-import Login from './components/core_context/Admin.Signin.one.CContext'
+import Login from './components/Session/User.Signin.one.rcontext'
 
 
 ReactDOM.render(

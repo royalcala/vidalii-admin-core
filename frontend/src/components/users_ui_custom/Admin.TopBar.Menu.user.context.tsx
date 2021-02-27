@@ -1,6 +1,6 @@
 import React from "react"
 import MailIcon from 'template-icons/Mail';
-import { TemplateContext } from '../core_context/Admin.TopBar.Menu.many.CContext'
+import { TemplateContext } from '../imports/admin/Admin.TopBar.Menu.many.rcontext'
 
 export default TemplateContext({
     title: 'User',
