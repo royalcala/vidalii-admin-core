@@ -92,7 +92,8 @@
   },
   "bit": {
     "env": {},
-    "componentsDefaultDirectory": "src/imports/{name}",
+    "componentsDefaultDirectory": "src/components/imports/{name}",
     "packageManager": "npm"
-  }
+  },
+  "proxy": "http://mybackend:4000"
 }

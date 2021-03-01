@@ -8,12 +8,10 @@ import {
   BrowserRouter as Router,
 } from "react-router-dom";
 
-
-//TODO alias
 import Admin from './components/imports/admin/Admin';
-import { theme } from './theme';
-import UserSession from "./components/Session/User.Session";
-import Login from './components/Session/User.Signin.one.rcontext'
+import { theme } from './components/imports/theme';
+import UserSession from "./components/core/Session/User.Session";
+import Login from './components/core/Session/User.Signin.one.rcontext'
 
 
 ReactDOM.render(

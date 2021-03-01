@@ -19,7 +19,8 @@ import { useForm } from 'react-hook-form';
 
 
 //context
-import { SessionContext } from '../Session/User.Session'
+// import { SessionContext } from '../../Session/User.Session'
+import { SessionContext } from '../../core/Session/User.Session'
 
 function Copyright() {
   return (
@@ -62,7 +63,27 @@ interface FormData {
 export default function SignIn() {
   const { session, setSession } = useContext(SessionContext)
   const { handleSubmit, register } = useForm<FormData>();
-  const onSubmit = handleSubmit(({password,username}) => {
+  const onSubmit = handleSubmit(({ password, username }) => {
+    fetch('/api/todos')
+      .then(
+        (value) => {
+          console.log(value)
+        })
+      .catch(
+        (value) => {
+          console.log(value)
+        })
+
+    fetch("http://localhost:4000")
+      .then(
+        (value) => {
+          console.log(value)
+        })
+      .catch(
+        (value) => {
+          console.log(value)
+        })
+
     if (username === 'admin' && password === 'admin') {
       alert('correct user')
       setSession({

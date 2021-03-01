@@ -1,6 +1,7 @@
 import React from "react"
 import MailIcon from 'template-icons/Mail';
-import { TemplateContext } from '../imports/admin/Admin.TopBar.Menu.many.rcontext'
+//change to pointer admin
+import { TemplateContext } from '../admin/Admin.TopBar.Menu.many.rcontext'
 
 export default TemplateContext({
     title: 'User',
