@@ -25,12 +25,9 @@ export interface MyContext {
 }
 
 
-class Vidalii {
-  //@ts-ignore
+class VidaliiService {
   private orm: MikroORM<IDatabaseDriver<Connection>>
-  //@ts-ignore
   private host: express.Application
-  //@ts-ignore
   private server: Server
   private entities = new Map() as Map<string, EntityClass<AnyEntity>>
   private api = {
@@ -45,25 +42,15 @@ class Vidalii {
     console.log('addType', name)
     this.api.type.set(name, type)
   }
-  public addResolver(type: keyof Vidalii['api']['resolver'], resolver: Function, options: 'replace' | 'pre' | 'post') {
+  public addResolver(type: keyof VidaliiService['api']['resolver'], resolver: Function, options: 'replace' | 'pre' | 'post' = 'replace') {
     console.log('addResolver:', resolver.name)
-    const optionReplace = (resolver, type: keyof Vidalii['api']['resolver'],) => {
+    const optionReplace = (type: keyof VidaliiService['api']['resolver'], resolver) => {
       this.api.resolver[type].set(resolver.name, resolver)
     }
-    switch (type) {
-      case 'Query':
-        optionReplace
+    switch (options) {
+      case 'replace':
+        optionReplace(type, resolver)
         break;
-      case 'Mutation':
-
-        break;
-      case 'Type':
-
-        break;
-    }
-    if (options === 'merge') {
-      this.api.resolver.get()
-      this.api.resolver.set(resolver.name, resolver)
     }
   }
   public addEntity(entity: EntityClass<AnyEntity>, options: 'replace' = 'replace') {
@@ -105,10 +92,16 @@ class Vidalii {
     }
   }
   private getSchemaApi() {
-    const schema = makeExecutableSchema({
+    const data = {
       typeDefs: [...this.api.type.values()].join('\n'),
-      resolvers: [...this.api.resolver.values()] as any
-    })
+      resolvers: {
+        Query: Object.fromEntries(this.api.resolver.Query),
+        ...Object.fromEntries(this.api.resolver.Type)
+      } as any
+    }
+    if (this.api.resolver.Mutation.size > 0)
+      data.resolvers.Mutation = Object.fromEntries(this.api.resolver.Mutation)
+    const schema = makeExecutableSchema(data)
     return schema
   }
   private async initServer() {
@@ -118,12 +111,14 @@ class Vidalii {
       this.host.get('/graphql', expressPlayground({ endpoint: '/graphql' }));
     }
     try {
+      const schema = this.getSchemaApi()
+
       this.host.post(
         '/graphql',
         bodyParser.json(),
         graphqlHTTP((req, res) => ({
-          schema: this.getSchemaApi(),
-          context: { req, res, em: this.orm.em.fork() } as MyContext,
+          schema,
+          context: { req, res, em: this.orm?.em?.fork() || 'no database init' } as MyContext,
           customFormatErrorFn: (error) => {
             throw error;
           },
@@ -147,10 +142,10 @@ class Vidalii {
 
   public async start(): Promise<void> {
     this.initAddsFiles()
-    await this.initDB()
+    // await this.initDB()
     await this.initServer()
   }
 }
 
-export default new Vidalii()
+export default new VidaliiService()
 

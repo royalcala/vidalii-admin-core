@@ -1,4 +1,4 @@
-import Vidalii from '../server'
+import Vidalii from '../vidaliiService'
 import { Cascade, Collection, Entity, OneToMany, Property, ManyToOne, Unique } from '@mikro-orm/core';
 
 // import { Book } from '.';
