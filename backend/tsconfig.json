@@ -1,15 +1,22 @@
 {
+  // "extends": "./tsconfig.template.json",
   "compilerOptions": {
-    "module": "commonjs",
-    "target": "es2017",
-    "moduleResolution": "node",
-    "declaration": true,
-    "outDir": "./dist",
-    "esModuleInterop": true,
-    "strict": true,
-    "experimentalDecorators": true,
-    "emitDecoratorMetadata": true
+      "target": "ESNext",
+      "module": "commonjs",
+      "lib": [
+          "ESNext",
+          "esnext.asynciterable"
+      ],
+      "experimentalDecorators": true,
+      "emitDecoratorMetadata": true,
+      "esModuleInterop": true,
+      "outDir": "dist/src"
   },
-  "include": ["./app"],
-  "exclude": ["node_modules"]
+  "include": [
+      "src"
+  ],
+  "exclude": [
+      "**/*deprected*",
+      "src/tests"
+  ]
 }
