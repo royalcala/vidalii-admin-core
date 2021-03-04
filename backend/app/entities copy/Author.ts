@@ -1,4 +1,3 @@
-import Server from '../server'
 import { Cascade, Collection, Entity, OneToMany, Property, ManyToOne, Unique } from '@mikro-orm/core';
 
 import { Book } from '.';
@@ -36,5 +35,3 @@ export class Author extends BaseEntity {
   }
 
 }
-
-Server.addEntity(Author)

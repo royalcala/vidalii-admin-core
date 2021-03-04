@@ -23,20 +23,31 @@ export interface MyContext {
   res: Response;
   em: EntityManager<IDatabaseDriver<Connection>>;
 }
-
-export default class Application {
+const a = new Map()
+class Vidalii {
   public orm: MikroORM<IDatabaseDriver<Connection>>;
   public host: express.Application;
   public server: Server;
-  public entities = [] as (string | EntityClass<AnyEntity> | EntityClassGroup<AnyEntity> | EntitySchema<any>)[]
-  public api = {
-    type: [] as String[],
-    resolver: [] as Function[]
+  private entities = new Map() as Map<string, EntityClass<AnyEntity>>
+  private api = {
+    type: new Map() as Map<string, string>,
+    resolver: new Map() as Map<string, Function>
+  }
+  public addType(name: string, type: string) {
+    this.api.type.set(name, type)
+  }
+  public addResolver(resolver: Function, options: 'pre' | 'post' | 'replace' = 'replace') {
+    if (options === 'replace')
+      this.api.resolver.set(resolver.name, resolver)
+  }
+  public addEntity(entity: EntityClass<AnyEntity>, options: 'replace' = 'replace') {
+    if (options === 'replace')
+      this.entities.set(entity.name, entity)
   }
 
   public initDB = async (): Promise<void> => {
     try {
-      ormConfig.entities = this.entities
+      ormConfig.entities = this.entities as any
       this.orm = await MikroORM.init(ormConfig);
       const migrator = this.orm.getMigrator();
       const migrations = await migrator.getPendingMigrations();
@@ -49,48 +60,7 @@ export default class Application {
     }
   };
 
-  private initGraphql() {
-    // const schema: GraphQLSchema = await buildSchema({
-    //   resolvers: [BookResolver, AuthorResolver],
-    //   dateScalarMode: 'isoDate',
-    // });
-    const files = glob.sync(this.apiPaths)
-      .map(path => {
-        console.log(path)
-        const file = require(path)
-        const data = {
-          typeDefs: [] as String[],
-          resolvers: [] as Function[]
-        }
-        if (file?.typeDef && typeof file?.typeDef === 'string')
-          data.typeDefs.push(file.typeDefs)
 
-        if (file?.resolvers && typeof file.resolver === 'function')
-          data.resolvers.push(file.resolvers)
-
-        return data
-      })
-    const typeDefs = files.map(data => {
-      if (data.typeDefs.length > 0)
-        return data.typeDefs
-      else
-        return null
-    }).filter(data => data !== null).join('\n')
-
-    const resolvers = files.map(data => {
-      if (data.resolvers.length > 0)
-        return data.resolvers
-      else
-        return null
-    }).filter(data => data !== null) as any
-
-    const schema = makeExecutableSchema({
-      typeDefs,
-      resolvers
-    });
-
-    return schema
-  }
   public initServer = async (): Promise<void> => {
     this.host = express();
 
@@ -102,7 +72,10 @@ export default class Application {
 
     try {
 
-      const schema = this.initGraphql()
+      const schema = makeExecutableSchema({
+        typeDefs: [...this.api.type.values()].join('\n'),
+        resolvers: [...this.api.resolver.values()] as any
+      });
 
       this.host.post(
         '/graphql',
@@ -131,3 +104,51 @@ export default class Application {
     }
   };
 }
+
+export default new Vidalii()
+
+  // private getSchema() {
+  //   // const schema: GraphQLSchema = await buildSchema({
+  //   //   resolvers: [BookResolver, AuthorResolver],
+  //   //   dateScalarMode: 'isoDate',
+  //   // });
+  //   const files = glob.sync(this.apiPaths)
+  //     .map(path => {
+  //       console.log(path)
+  //       const file = require(path)
+  //       const data = {
+  //         typeDefs: [] as String[],
+  //         resolvers: [] as Function[]
+  //       }
+  //       if (file?.typeDef && typeof file?.typeDef === 'string')
+  //         data.typeDefs.push(file.typeDefs)
+
+  //       if (file?.resolvers && typeof file.resolver === 'function')
+  //         data.resolvers.push(file.resolvers)
+
+  //       return data
+  //     })
+  //   const typeDefs = files.map(data => {
+  //     if (data.typeDefs.length > 0)
+  //       return data.typeDefs
+  //     else
+  //       return null
+  //   }).filter(data => data !== null).join('\n')
+
+  //   const resolvers = files.map(data => {
+  //     if (data.resolvers.length > 0)
+  //       return data.resolvers
+  //     else
+  //       return null
+  //   }).filter(data => data !== null) as any
+
+  //   const schema = makeExecutableSchema({
+  //     typeDefs,
+  //     resolvers
+  //   });
+
+  //   return schema
+  // }
+
+
+

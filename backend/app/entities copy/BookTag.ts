@@ -1,4 +1,3 @@
-import Server from '../server'
 import { Collection, Entity, ManyToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Book } from '.';
 
@@ -19,5 +18,3 @@ export class BookTag {
   }
 
 }
-
-Server.addEntity(BookTag)

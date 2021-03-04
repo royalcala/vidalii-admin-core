@@ -1,4 +1,3 @@
-import Server from '../server'
 import { Collection, Entity, Enum, OneToMany, PrimaryKey, Property } from '@mikro-orm/core';
 import { Book } from '.';
 
@@ -28,4 +27,3 @@ export enum PublisherType {
   LOCAL = 'local',
   GLOBAL = 'global',
 }
-Server.addEntity(Publisher)

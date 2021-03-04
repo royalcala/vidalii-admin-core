@@ -1,4 +1,3 @@
-import Server from '../server'
 import { PrimaryKey, Property } from '@mikro-orm/core';
 
 export abstract class BaseEntity {
@@ -13,6 +12,3 @@ export abstract class BaseEntity {
   updatedAt: Date = new Date();
 
 }
-
-
-Server.addEntity(BaseEntity)

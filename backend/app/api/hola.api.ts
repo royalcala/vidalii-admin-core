@@ -1,13 +1,13 @@
+import Server from '../server'
 
 
-export const typeDefs = `
+const typeDefs = `
+
 `
 
+export function resolver1() {
 
-export const resolvers:Function[] = []
+}
 
-resolvers.push(
-    function myResolver(){
-
-    }
-)
+Server.api.type.push(typeDefs)
+Server.api.resolver.push(resolver1)
