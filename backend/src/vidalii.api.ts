@@ -1,6 +1,6 @@
 import { GraphQLSchema } from 'graphql';
 import { makeExecutableSchema } from 'graphql-tools'
-
+import glob from 'glob'
 
 
 export class Api {

@@ -1,4 +1,4 @@
-import Vidalii from '../vidalii'
+import Vidalii from '../../vidalii'
 import { Cascade, Collection, Entity, OneToMany, Property, ManyToOne, Unique } from '@mikro-orm/core';
 
 // import { Book } from '.';
@@ -14,13 +14,13 @@ export class Author extends BaseEntity {
   @Unique()
   email: string;
 
-  @Property({ nullable: true })
+  @Property()
   age?: number;
 
   @Property()
   termsAccepted = false;
 
-  @Property({ nullable: true })
+  @Property()
   born?: Date;
 
   // @OneToMany(() => Book, b => b.author, { cascade: [Cascade.ALL] })

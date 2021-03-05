@@ -1,4 +1,4 @@
-import Vidalii from '../vidalii'
+import Vidalii from '../../vidalii'
 import { PrimaryKey, Property } from '@mikro-orm/core';
 export abstract class BaseEntity {
 

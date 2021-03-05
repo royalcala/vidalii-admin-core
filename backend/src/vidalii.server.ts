@@ -1,6 +1,5 @@
 import express from 'express';
 // import 'express-async-errors';
-import bodyParser from 'body-parser';
 import cors from 'cors';
 import { graphqlHTTP } from 'express-graphql';
 import expressPlayground from 'graphql-playground-middleware-express';
@@ -29,14 +28,13 @@ export class VServer {
             const schema = api.getSchemaApi()
             this.host.post(
                 '/graphql',
-                bodyParser.json(),
                 graphqlHTTP(
                     (req, res) => ({
                         schema,
                         context: { req, res, em: db.orm?.em?.fork() || 'no database init' } as Context,
-                        customFormatErrorFn: (error) => {
-                            throw error;
-                        },
+                        // customFormatErrorFn: (error) => {
+                        //     throw error;
+                        // },
                         customExecuteFn: async (args) => {
                             let response = await execute(args)
                             const context = args.contextValue as Context
