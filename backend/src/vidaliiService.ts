@@ -1,24 +1,37 @@
 import express from 'express';
 // import 'express-async-errors';
-import Path from 'path'
+import { TsMorphMetadataProvider } from '@mikro-orm/reflection'
 import { Connection, IDatabaseDriver, MikroORM, EntityManager, Options, AnyEntity, EntitySchema } from '@mikro-orm/core';
 import bodyParser from 'body-parser';
-// import { PublisherType } from 'contracts/enums/publisherType.enum';
 import cors from 'cors';
 import { graphqlHTTP } from 'express-graphql';
 import { GraphQLSchema } from 'graphql';
 import expressPlayground from 'graphql-playground-middleware-express';
 import { Server } from 'http';
-import ormConfig from './orm.config';
+// import ormConfig from './orm.config';
 import { makeExecutableSchema } from 'graphql-tools'
 import glob from 'glob'
-// import { AuthorResolver } from 'resolvers/author.resolver';
-// import { BookResolver } from 'resolvers/book.resolver';
-// import { buildSchema, registerEnumType } from 'type-graphql';
 import { Request, Response } from 'express';
 import { EntityClass, EntityClassGroup } from '@mikro-orm/core/typings';
+import { SqlHighlighter } from '@mikro-orm/sql-highlighter';
 
-export interface MyContext {
+// const ormConfig: Options = {
+//   metadataProvider:TsMorphMetadataProvider,
+//   migrations: {
+//     path: './src/migrations',
+//     tableName: 'migrations',
+//     transactional: true,
+//   },
+//   tsNode: process.env.NODE_DEV === 'true' ? true : false,
+//   type: 'sqlite',
+//   dbName: 'test.db',
+//   // as we are using class references here, we don't need to specify `entitiesTs` option
+//   // entities: [Author, Book, BookTag, Publisher, BaseEntity],
+//   highlighter: new SqlHighlighter(),
+//   debug: true,
+// }
+
+export interface Context {
   req: Request;
   res: Response;
   em: EntityManager<IDatabaseDriver<Connection>>;
@@ -26,6 +39,21 @@ export interface MyContext {
 
 
 class VidaliiService {
+  private ormConfig: Options = {
+    metadataProvider: TsMorphMetadataProvider,
+    migrations: {
+      path: './src/migrations',
+      tableName: 'migrations',
+      transactional: true,
+    },
+    tsNode: process.env.NODE_DEV === 'true' ? true : false,
+    type: 'sqlite',
+    dbName: 'test.db',
+    // as we are using class references here, we don't need to specify `entitiesTs` option
+    // entities: [Author, Book, BookTag, Publisher, BaseEntity],
+    highlighter: new SqlHighlighter(),
+    debug: true,
+  }
   private orm: MikroORM<IDatabaseDriver<Connection>>
   private host: express.Application
   private server: Server
@@ -78,9 +106,9 @@ class VidaliiService {
 
   private async initDB(): Promise<void> {
     try {
-      ormConfig.entities = [...this.entities.values()] as any
-      console.log(ormConfig.entities)
-      this.orm = await MikroORM.init(ormConfig);
+      this.ormConfig.entities = [...this.entities.values()] as any
+      console.log(this.ormConfig.entities)
+      this.orm = await MikroORM.init(this.ormConfig);
       const migrator = this.orm.getMigrator();
       const migrations = await migrator.getPendingMigrations();
       if (migrations && migrations.length > 0) {
@@ -113,16 +141,19 @@ class VidaliiService {
     try {
       const schema = this.getSchemaApi()
 
+      //TODO validate with graphql like in ms and agregate flush after all the operations
       this.host.post(
         '/graphql',
         bodyParser.json(),
-        graphqlHTTP((req, res) => ({
-          schema,
-          context: { req, res, em: this.orm?.em?.fork() || 'no database init' } as MyContext,
-          customFormatErrorFn: (error) => {
-            throw error;
-          },
-        })),
+        graphqlHTTP(
+          (req, res) => ({
+            schema,
+            context: { req, res, em: this.orm?.em?.fork() || 'no database init' } as Context,
+            customFormatErrorFn: (error) => {
+              throw error;
+            },
+          })
+        ),
       );
 
       // eslint-disable-next-line @typescript-eslint/no-unused-vars
@@ -142,7 +173,7 @@ class VidaliiService {
 
   public async start(): Promise<void> {
     this.initAddsFiles()
-    // await this.initDB()
+    await this.initDB()
     await this.initServer()
   }
 }

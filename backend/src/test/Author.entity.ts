@@ -8,7 +8,7 @@ import { BaseEntity } from './BaseEntity.entity';
 export class Author extends BaseEntity {
 
   @Property()
-  name: string;
+  name: String;
 
   @Property()
   @Unique()
