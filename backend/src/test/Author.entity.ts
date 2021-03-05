@@ -1,4 +1,4 @@
-import Vidalii from '../vidaliiService'
+import Vidalii from '../vidalii'
 import { Cascade, Collection, Entity, OneToMany, Property, ManyToOne, Unique } from '@mikro-orm/core';
 
 // import { Book } from '.';
@@ -37,4 +37,4 @@ export class Author extends BaseEntity {
 
 }
 
-Vidalii.addEntity(Author)
+Vidalii.db.addEntity(Author)

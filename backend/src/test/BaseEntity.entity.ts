@@ -1,4 +1,4 @@
-import Vidalii from '../vidaliiService'
+import Vidalii from '../vidalii'
 import { PrimaryKey, Property } from '@mikro-orm/core';
 export abstract class BaseEntity {
 
@@ -14,4 +14,4 @@ export abstract class BaseEntity {
 }
 
 
-Vidalii.addEntity(BaseEntity)
+Vidalii.db.addEntity(BaseEntity)

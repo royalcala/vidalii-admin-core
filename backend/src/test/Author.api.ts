@@ -1,6 +1,6 @@
-import Vidalii from '../vidaliiService'
+import Vidalii from '../vidalii'
 import { Author } from './Author.entity'
-import type { Context } from '../vidaliiService'
+import type { Context } from '../vidalii'
 const typeDefs = `
 type Author{
   name: String
@@ -25,6 +25,6 @@ function AuthorInsert(parent, args: { name: String }, cxt: Context) {
 }
 
 
-Vidalii.addType('Query.test', typeDefs)
+Vidalii.api.addType('Query.test', typeDefs)
 
-Vidalii.addResolver('Query', test)
+Vidalii.api.addResolver('Query', test)

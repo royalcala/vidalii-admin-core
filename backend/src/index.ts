@@ -1,5 +1,5 @@
 import 'reflect-metadata';
-import Vidalii from './vidaliiService';
+import Vidalii from './vidalii';
 
 (async () => {
     console.log('hellow')
