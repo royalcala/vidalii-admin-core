@@ -1,5 +1,6 @@
 {
   "scripts": {
+    "publish:vidalii":"GIT_USER=royalcala CURRENT_BRANCH=main npm run publish-gh-pages",
     "examples": "docusaurus-examples",
     "start": "docusaurus-start",
     "build": "docusaurus-build",

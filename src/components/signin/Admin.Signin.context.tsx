@@ -1,5 +1,4 @@
 import React, { useContext } from 'react';
-//template
 import Avatar from 'template-core/Avatar';
 import Button from 'template-core/Button';
 import CssBaseline from 'template-core/CssBaseline';
@@ -13,10 +12,7 @@ import LockOutlinedIcon from 'template-icons/LockOutlined';
 import Typography from 'template-core/Typography';
 import { makeStyles } from 'template-core/styles';
 import Container from 'template-core/Container';
-import { gql } from "graphql-request";
 import { Client } from "../..";
-import SimpleDialog from "../dialogs/simple";
-//form
 import { useForm } from 'react-hook-form';
 
 
@@ -63,69 +59,19 @@ interface FormData {
   password: string;
 }
 
-const query = gql`#graphql
-          mutation Login($username:String!, $password:String!){
-              sessionLogin(
-                username:$username,
-                password:$password
-              )
-        }
-      `
-
-export default function SignIn(props: {
-  setSession: () => void
-}) {
-  // const { session, setSession } = useContext(SessionContext)
-  const { client } = useContext(Client)
+export default function SignIn(props:{checkSession:(username: string, password: string) => Promise<void>}) {
+  const checkSession = props.checkSession as (username: string, password: string) => Promise<void>
   const { handleSubmit, register } = useForm<FormData>();
-  const [openAlert, setOpenAlert] = React.useState({
-    msg: '',
-    open: false
-  })
+
   const onSubmit = handleSubmit(
-    async ({ password, username }) => {
-      try {
-        const response = await client.request(
-          query,
-          { username, password }
-        )
-        client.setHeader('authorization', response.sessionLogin)
-        props.setSession()
-      } catch (error) {
-        const msg = error?.response?.errors[0]?.message || 'Error signin'
-        setOpenAlert({
-          msg,
-          open: true
-        })
-
-      }
-
-      // fetch('/graphql')
-      //   .then(
-      //     (value) => {
-      //       console.log(value)
-      //     })
-      //   .catch(
-      //     (value) => {
-      //       console.log(value)
-      //     })
-
-      // fetch("http://localhost:4000")
-      //   .then(
-      //     (value) => {
-      //       console.log(value)
-      //     })
-      //   .catch(
-      //     (value) => {
-      //       console.log(value)
-      //     })
+    async ({ username, password }) => {
+      await checkSession(username, password)
     });
   const classes = useStyles()
 
   return (
     <Container component="main" maxWidth="xs">
       <CssBaseline />
-      <SimpleDialog msg={openAlert.msg} open={openAlert.open} close={() => { setOpenAlert({ msg: '', open: false }) }} />
       <div className={classes.paper}>
         <Avatar className={classes.avatar}>
           <LockOutlinedIcon />
