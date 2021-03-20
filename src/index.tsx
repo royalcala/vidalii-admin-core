@@ -17,7 +17,6 @@ export const Client = React.createContext({
   client
 })
 
-
 ReactDOM.render(
   <React.StrictMode>
     <Router>

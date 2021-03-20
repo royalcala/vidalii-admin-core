@@ -5,11 +5,10 @@ import Toolbar from 'template-core/Toolbar';
 import IconButton from 'template-core/IconButton';
 import Typography from 'template-core/Typography';
 import InputBase from 'template-core/InputBase';
-import MenuIcon from 'template-icons/Menu';
 import SearchIcon from 'template-icons/Search';
 import MoreIcon from 'template-icons/MoreVert';
 import Menu from 'template-core/Menu';
-
+import LeftDrawer from "./Admin.TopBar.Drawer";
 //Components Context
 import { ListComponents as ListMenu } from './Admin.TopBar.Menu.many.rcontext'
 
@@ -149,20 +148,22 @@ export default function TopBar() {
         </Menu>
     );
 
+    // const [state, setState] = React.useState(false)
     return (
         <div className={classes.grow}>
             <AppBar position="static">
                 <Toolbar variant="dense">
-                    <IconButton
+                {/* <IconButton
                         edge="start"
                         className={classes.menuButton}
                         color="inherit"
                         aria-label="open drawer"
                     >
                         <MenuIcon />
-                    </IconButton>
+                    </IconButton> */}
+                    <LeftDrawer  />
                     <Typography className={classes.title} variant="h6" noWrap>
-                        Vidalii-TopBar
+                        Vidalii ERP
           </Typography>
                     <div className={classes.search}>
                         <div className={classes.searchIcon}>

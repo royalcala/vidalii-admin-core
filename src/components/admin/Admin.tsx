@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { makeStyles, Theme, createStyles } from 'template-core/styles';
 import TopBar from './Admin.TopBar'
-import Drawer from './Admin.Drawer'
+import Drawer from './Admin.TopBar.Drawer'
 export const useStyles = makeStyles(
   (theme: Theme) =>
     createStyles({
@@ -17,7 +17,6 @@ export default function Admin() {
   return (
     <div className={classes.grow}>
       <TopBar />
-      <Drawer />
     </div>
   );
 }

@@ -5,10 +5,10 @@ import { Client } from "../..";
 import SimpleDialog from "../dialogs/simple";
 import { gql } from "graphql-request";
 
-// type Props = {
-//     admin: JSX.Element,
-//     login: JSX.Element
-// }
+export const Session = React.createContext<{
+    session: null | string,
+    setSession: (value: string | null) => void
+}>({ session: null, setSession: () => { } })
 const query = gql`#graphql
           mutation Login($username:String!, $password:String!){
               sessionLogin(
@@ -17,9 +17,10 @@ const query = gql`#graphql
               )
         }
       `
+const AUTH = 'authorization'
 export default function UserSession() {
     // getter
-    const [session, setSession] = React.useState(localStorage.getItem('jwt'))
+    const [session, setSession] = React.useState(localStorage.getItem(AUTH))
 
     // remove
     // localStorage.removeItem('myData');
@@ -34,8 +35,8 @@ export default function UserSession() {
                 query,
                 { username, password }
             )
-            client.setHeader('authorization', response.sessionLogin)
-            localStorage.setItem('jwt', response.sessionLogin)
+            client.setHeader(AUTH, response.sessionLogin)
+            localStorage.setItem(AUTH, response.sessionLogin)
             setSession(response.sessionLogin)
         } catch (error) {
             const msg = error?.response?.errors[0]?.message || error
@@ -49,7 +50,14 @@ export default function UserSession() {
 
     if (session) {
         client.setHeader('authorization', session)
-        return <Admin />
+        return (           
+            <Session.Provider value={{ session, setSession:()=>{
+                localStorage.removeItem(AUTH)
+                setSession(null)
+            } }}>
+                <Admin />
+            </Session.Provider>
+        )
     }
     else {
         return (
@@ -62,3 +70,9 @@ export default function UserSession() {
         )
     }
 }
+
+// export function LogOut() {
+//     const { setSession } = React.useContext(Session)
+//     localStorage.removeItem(AUTH);
+//     setSession(null)
+// }
