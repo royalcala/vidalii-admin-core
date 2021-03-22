@@ -124,8 +124,8 @@ export default function TopBar() {
         >
             {
                 ListMenu.slice(3).map(
-                    Component => {
-                        return <Component display='hidden' screen='desktop' closeMenu={closeDesktopMenu} />
+                    (Component,index) => {
+                        return <Component display='hidden' screen='desktop' closeMenu={closeDesktopMenu} key={index} />
                     }
                 )
             }
@@ -143,7 +143,7 @@ export default function TopBar() {
             onClose={closeMobilMenu}
         >
             {ListMenu.map(
-                Component => <Component display='hidden' screen='mobil' closeMenu={closeMobilMenu} />
+                (Component,index) => <Component display='hidden' screen='mobil' closeMenu={closeMobilMenu} key={index} />
             )}
         </Menu>
     );

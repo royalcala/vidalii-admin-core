@@ -1,7 +1,7 @@
 
 export type Route = {
     name: string,
-    nested: string,
+    path: string,//for one level without children only write "user
     sidebar: boolean,
     Icon: JSX.Element,
     Component: JSX.Element

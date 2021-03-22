@@ -1,9 +1,9 @@
 import { Route } from "components/routes/Routes.many.rcontext";
-import AccountIcon from 'template-icons/AccountCircle';
+import AccountIcon from 'template-icons/AccountCircleTwoTone';
 
 const route: Route = {
     name: 'My Account',
-    nested: 'User',
+    path: 'user',
     sidebar: true,
     Icon: <AccountIcon />,
     Component: <MyAccount />

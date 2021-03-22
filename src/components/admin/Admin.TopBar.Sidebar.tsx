@@ -6,15 +6,16 @@ import Divider from 'template-core/Divider';
 import ListItem from 'template-core/ListItem';
 import ListItemIcon from 'template-core/ListItemIcon';
 import ListItemText from 'template-core/ListItemText';
-import InboxIcon from 'template-icons/MoveToInbox';
-import MailIcon from 'template-icons/Mail';
 import MenuIcon from 'template-icons/Menu';
 import IconButton from 'template-core/IconButton';
-import { Routes } from '../routes/Routes.many.rcontext'
-
+import { Routes, Route } from '../routes/Routes.many.rcontext'
+import Breadcrumbs from 'template-core/Breadcrumbs';
+import Link from 'template-core/Link';
+import Typography from 'template-core/Typography';
+import ExpandMore from 'template-icons/ExpandMoreTwoTone';
 const useStyles = makeStyles((theme: Theme) => createStyles({
   list: {
-    width: 250,
+    width: 300,
   },
   fullList: {
     width: 'auto',
@@ -22,68 +23,175 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
   menuButton: {
     marginRight: theme.spacing(2),
   },
+  breadcrumbs: {
+    marginLeft: theme.spacing(2),
+    marginRight: theme.spacing(2),
+  },
+  titleSidebar: {
+    textAlign: 'center'
+  },
+  nested: {
+    paddingLeft: theme.spacing(4),
+  }
 }))
 
 
+const searchRoutes = (startsWith: string) => {
+  return Routes.filter(route => route.path.startsWith(startsWith))
+}
+
+const GetChildrenOrParent = (Routes:Route[]) => {
+  return Routes.filter(value => value.sidebar === true)
+  .map(
+    value => {
+      // if(value.path.split())
+    }
+  )
+
+
+}
+
+const getLevelsWithoutChildren = (Routes: Route[]) => {
+  return Routes.filter(value => value.sidebar === true && value.path.split('/').length === 1).map(
+    (value) => (
+      < ListItem button key={value.name} >
+        <ListItemIcon>{value.Icon}</ListItemIcon>
+        <ListItemText primary={value.name} />
+      </ListItem>
+    )
+  )
+}
+const getLevelsWithChildren = (Routes: Route[], setStateMenu: any) => {
+  return Routes.filter(value => value.sidebar === true && value.path.split('/').length > 1).map(
+    (value) => (
+      < ListItem button key={value.path.split('/')[0]} onClick={() => {
+        const nextRoutes = Routes.map(value => {
+          const paths = value.path.split('/')
+          delete paths[0]
+
+          return ({
+            ...value,
+            path: paths.join('/')
+          })
+        })
+        setStateMenu()({
+          breadcrum: '/' + value.path.split('/')[0],
+          levelsWithoutChildren: getLevelsWithoutChildren(nextRoutes),
+          levelsWithChildren: getLevelsWithChildren(nextRoutes, setStateMenu)
+        })
+
+        //setNewList
+
+      }}>
+        <ListItemIcon><ExpandMore /></ListItemIcon>
+        <ListItemText primary={value.path.split('/')[0]} />
+      </ListItem>
+    )
+  )
+}
 export default function SideBar() {
   const classes = useStyles();
-  const [state, setState] = React.useState(false);
+  const [stateDrawer, setStateDrawer] = React.useState(false);
 
+
+  const [stateMenu, setStateMenu] = React.useState({
+    breadcrum: '/',
+    levelsWithoutChildren: getLevelsWithoutChildren(Routes),
+    levelsWithChildren: getLevelsWithChildren(Routes, () => setStateMenu)
+  })
   const toggleDrawer = (
-    event: React.KeyboardEvent | React.MouseEvent,
+    event: any
   ) => {
-    if (
-      event.type === 'keydown' &&
-      ((event as React.KeyboardEvent).key === 'Tab' ||
-        (event as React.KeyboardEvent).key === 'Shift')
-    ) {
-      return;
-    }
+    if (stateDrawer === false)
+      setStateDrawer(true)
+    else if (event.target.className === "MuiBackdrop-root")
+      setStateDrawer(!stateDrawer)
+  }
 
-    setState(!state)
-  };
+  // const LevelsWithoutChildrensInitial = Routes.filter(value => value.sidebar === true && value.path.split('/').length === 1).map(
+  //   (value) => (
+  //     < ListItem button key={value.name} >
+  //       <ListItemIcon>{value.Icon}</ListItemIcon>
+  //       <ListItemText primary={value.name} />
+  //     </ListItem>
+  //   )
+  // )
 
-  const list = () => (
-    <div
-    // className={clsx(classes.list, {
-    //   [classes.fullList]: anchor === 'top' || anchor === 'bottom',
-    // })}
-    // role="presentation"
-    // onClick={toggleDrawer(anchor, false)}
-    // onKeyDown={toggleDrawer(anchor, false)}
-    >
-      <List>
-        {Routes.map(({name,Icon}, index) => (
-          <ListItem button key={name}>
-            <ListItemIcon>{Icon}</ListItemIcon>
-            <ListItemText primary={name} />
-          </ListItem>
-        ))}
-      </List>
-      <Divider />
-      <List>
-        {['All mail', 'Trash', 'Spam'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
-          </ListItem>
-        ))}
-      </List>
-    </div>
-  );
+  // const LevelsWithChildrenInitial = Routes.filter(value => value.sidebar === true && value.path.split('/').length > 1).map(
+  //   (value) => (
+  //     < ListItem button key={value.path.split('/')[0]} onClick={() => {
+  //       //update breadcrum with the next level
+  //       // setStateMenu({
+  //       //   breadcrum: '/' + value.path.split('/')[0],
+  //       //   levels: []
+  //       // })
+
+  //       //setNewList
+
+  //     }}>
+  //       <ListItemIcon><ExpandMore /></ListItemIcon>
+  //       <ListItemText primary={value.path.split('/')[0]} />
+  //     </ListItem>
+  //   )
+  // )
+
+
+
+  // return (<div
+  //   role="presentation"
+  // >
+  //   <h1 className={classes.titleSidebar}>Vidalii ERP</h1>
+  //   <Breadcrumbs aria-label="breadcrumb" className={classes.breadcrumbs}>
+  //     <Link color="inherit" href="#" >
+  //       {stateMenu.breadcrum}
+  //     </Link>
+  //     {/* <Link color="inherit" href="#" >
+  //         Core
+  // </Link>
+  //       <Typography color="textPrimary">Breadcrumb</Typography> */}
+  //   </Breadcrumbs>
+  //   <Divider />
+  //   <List className={classes.list}>
+  //     {/* {LevelsWithoutChildrens}
+  //     {LevelsWithChildren} */}
+  //   </List>
+  // </div >
+  // )
 
   return (
-    <IconButton
-      edge="start"
-      className={classes.menuButton}
-      color="inherit"
-      aria-label="open drawer"
-      onClick={toggleDrawer}
-    >
-      <MenuIcon />
-      <Drawer anchor='left' open={state} >
-        {list()}
-      </Drawer>
-    </IconButton>
-  );
+    <>
+      <IconButton
+        edge="start"
+        className={classes.menuButton}
+        color="inherit"
+        aria-label="open drawer"
+        onClick={toggleDrawer}
+      >
+        <Drawer anchor='left' open={stateDrawer}>
+          <div
+            role="presentation"
+          >
+            <h1 className={classes.titleSidebar}>Vidalii ERP</h1>
+            <Breadcrumbs aria-label="breadcrumb" className={classes.breadcrumbs}>
+              <Link color="inherit" href="#" >
+                {stateMenu.breadcrum}
+              </Link>
+              {/* <Link color="inherit" href="#" >
+            Core
+    </Link>
+          <Typography color="textPrimary">Breadcrumb</Typography> */}
+            </Breadcrumbs>
+            <Divider />
+            <List className={classes.list}>
+              {stateMenu.levelsWithChildren}
+              {stateMenu.levelsWithoutChildren}
+            </List>
+          </div >
+
+        </Drawer>
+        <MenuIcon />
+      </IconButton>
+
+    </>
+  )
 }
