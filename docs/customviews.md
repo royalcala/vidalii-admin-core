@@ -8,7 +8,7 @@ sidebar_label: Custom Views
 
 ## Sigin
 
-It's called by `session/User.Signin.one.rcontext.tsx` the file needs  be named `Admin.Signin.context.tsx`.
+Remplace the file `session/Admin.Signin.tsx` it use some props that you can see in the file for use it for create the session.
 
 ## Top Right Menu
 It's called by `admin/Admin.TopBar.Menu.many.rcontext.tsx` the file needs to be named `Admin.TopBar.Menu.[yourName].context.tsx`.

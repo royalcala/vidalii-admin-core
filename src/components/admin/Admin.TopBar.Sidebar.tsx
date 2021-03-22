@@ -10,6 +10,8 @@ import InboxIcon from 'template-icons/MoveToInbox';
 import MailIcon from 'template-icons/Mail';
 import MenuIcon from 'template-icons/Menu';
 import IconButton from 'template-core/IconButton';
+import { Routes } from '../routes/Routes.many.rcontext'
+
 const useStyles = makeStyles((theme: Theme) => createStyles({
   list: {
     width: 250,
@@ -23,7 +25,7 @@ const useStyles = makeStyles((theme: Theme) => createStyles({
 }))
 
 
-export default function LeftDrawer() {
+export default function SideBar() {
   const classes = useStyles();
   const [state, setState] = React.useState(false);
 
@@ -51,10 +53,10 @@ export default function LeftDrawer() {
     // onKeyDown={toggleDrawer(anchor, false)}
     >
       <List>
-        {['Inbox', 'Starred', 'Send email', 'Drafts'].map((text, index) => (
-          <ListItem button key={text}>
-            <ListItemIcon>{index % 2 === 0 ? <InboxIcon /> : <MailIcon />}</ListItemIcon>
-            <ListItemText primary={text} />
+        {Routes.map(({name,Icon}, index) => (
+          <ListItem button key={name}>
+            <ListItemIcon>{Icon}</ListItemIcon>
+            <ListItemText primary={name} />
           </ListItem>
         ))}
       </List>

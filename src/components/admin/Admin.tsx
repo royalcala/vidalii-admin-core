@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { makeStyles, Theme, createStyles } from 'template-core/styles';
 import TopBar from './Admin.TopBar'
-import Drawer from './Admin.TopBar.Drawer'
+import Drawer from './Admin.TopBar.Sidebar'
 export const useStyles = makeStyles(
   (theme: Theme) =>
     createStyles({

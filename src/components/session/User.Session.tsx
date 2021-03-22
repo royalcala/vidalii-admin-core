@@ -1,5 +1,5 @@
 import React from 'react';
-import Login from './User.Signin.one.rcontext'
+import Login from './Admin.Signin'
 import Admin from '../admin/Admin';
 import { Client } from "../..";
 import SimpleDialog from "../dialogs/simple";
@@ -7,8 +7,8 @@ import { gql } from "graphql-request";
 
 export const Session = React.createContext<{
     session: null | string,
-    setSession: (value: string | null) => void
-}>({ session: null, setSession: () => { } })
+    closeSession: () => void
+}>({ session: null, closeSession: () => { } })
 const query = gql`#graphql
           mutation Login($username:String!, $password:String!){
               sessionLogin(
@@ -51,7 +51,7 @@ export default function UserSession() {
     if (session) {
         client.setHeader('authorization', session)
         return (           
-            <Session.Provider value={{ session, setSession:()=>{
+            <Session.Provider value={{ session, closeSession:()=>{
                 localStorage.removeItem(AUTH)
                 setSession(null)
             } }}>
@@ -62,17 +62,10 @@ export default function UserSession() {
     else {
         return (
             <>
-                <SimpleDialog msg={openAlert.msg} open={openAlert.open} close={() => { setOpenAlert({ msg: '', open: false }) }} />
-                {/* @ts-ignore */}
+                <SimpleDialog msg={openAlert.msg} open={openAlert.open} close={() => { setOpenAlert({ msg: '', open: false }) }} />             
                 <Login checkSession={checkSession} />
             </>
 
         )
     }
 }
-
-// export function LogOut() {
-//     const { setSession } = React.useContext(Session)
-//     localStorage.removeItem(AUTH);
-//     setSession(null)
-// }

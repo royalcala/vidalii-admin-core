@@ -5,10 +5,10 @@ import IconButton from 'template-core/IconButton';
 import Badge from 'template-core/Badge';
 import MenuItem from "template-core/MenuItem";
 import Menu from 'template-core/Menu';
-import { Session } from "../session/User.Session";
+import { Session } from "./User.Session";
 
-function SimpleMenu() {
-    const { setSession } = React.useContext(Session)
+function SessionMenu() {
+    const { closeSession } = React.useContext(Session)
     const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
 
     const handleClick = (event: React.MouseEvent<HTMLButtonElement>) => {
@@ -33,7 +33,7 @@ function SimpleMenu() {
             >
                 <MenuItem onClick={handleClose}>My account</MenuItem>
                 <MenuItem onClick={() => {
-                    setSession(null)
+                    closeSession()
                 }}>Logout</MenuItem>
             </Menu>
         </div>
@@ -41,7 +41,7 @@ function SimpleMenu() {
 }
 
 export default TemplateContext({
-    desktopShown: <SimpleMenu />,
+    desktopShown: <SessionMenu />,
     desktopHidden: (closeMenu) => <MenuItem onClick={closeMenu}>Title User</MenuItem>,
     mobil:
         <MenuItem>
