@@ -1,16 +1,17 @@
 
 export type Route = {
     name: string,
-    path: string,//for one level without children only write "user
+    parent: string | null
     sidebar: boolean,
-    Icon: JSX.Element,
-    Component: JSX.Element
+    // Icon: JSX.Element,
+    Icon: Function,
+    Component: Function
 }
 
 const getContext = require.context(
     'components',
     true,
-    /Route\..+\.context\.(tsx|js)$/
+    /.+\.route\.(tsx|js)$/
 )
 
 export const Routes = getContext.keys().map(dir => {

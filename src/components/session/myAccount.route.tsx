@@ -1,16 +1,16 @@
 import { Route } from "components/routes/Routes.many.rcontext";
 import AccountIcon from 'template-icons/AccountCircleTwoTone';
-
+import { useRouteMatch } from "react-router-dom";
 const route: Route = {
-    name: 'My Account',
-    path: 'user',
+    name: 'MyAccount',
+    parent: 'System',
     sidebar: true,
-    Icon: <AccountIcon />,
-    Component: <MyAccount />
+    Icon: AccountIcon,
+    Component: MyAccount
 }
 export default route
 
-export function MyAccount() {
+function MyAccount() {
     return (
         <div>My Account App</div>
     )

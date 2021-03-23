@@ -1,7 +1,7 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { makeStyles, Theme, createStyles } from 'template-core/styles';
 import TopBar from './Admin.TopBar'
-import Drawer from './Admin.TopBar.Sidebar'
+import SwitchRoutes from "./Admin.Switch";
 export const useStyles = makeStyles(
   (theme: Theme) =>
     createStyles({
@@ -17,6 +17,7 @@ export default function Admin() {
   return (
     <div className={classes.grow}>
       <TopBar />
+      <SwitchRoutes />
     </div>
   );
 }
