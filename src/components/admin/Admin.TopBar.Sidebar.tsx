@@ -14,7 +14,7 @@ import Link from 'template-core/Link';
 import Typography from 'template-core/Typography';
 import ExpandMore from 'template-icons/ExpandMoreTwoTone';
 import {
- useHistory
+  useHistory
 } from "react-router-dom";
 const useStyles = makeStyles((theme: Theme) => createStyles({
   list: {
@@ -46,7 +46,7 @@ const Children = (value: Route, index: number, history: any, setStateDrawer: any
       setStateDrawer(false)
       history.push(to);
     }}>
-      <ListItemIcon><value.Icon/></ListItemIcon>
+      <ListItemIcon><value.Icon /></ListItemIcon>
       <ListItemText primary={value.name} />
     </ListItem>
   )
@@ -59,7 +59,16 @@ const GetParentChildren = (parent: string, history: any, setStateDrawer: any) =>
 const GetRouteItems = (Routes: Route[], setStateItems: () => (a: Items) => void, history: any, setStateDrawer: any) => {
   const parentsPrinted: string[] = []
   return Routes.filter(value => value.sidebar === true)
-    .map(
+    .sort(
+      (a, b) => {
+        if (a.name > b.name)
+          return 1
+        else if (a.name === b.name)
+          return 0
+        else
+          return -1
+      }
+    ).map(
       (value, index) => {
         if (value.parent === null)
           return Children(value, index, history, setStateDrawer)

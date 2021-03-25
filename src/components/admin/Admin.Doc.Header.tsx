@@ -33,11 +33,17 @@ const useStyles = makeStyles((theme: Theme) =>
     }),
 );
 
-type Props = {
+export type Props = {
     breadcrum: {
         name: string,
         parent: null | string,
         Icon: Function
+    },
+    gql:{
+        operationQuery:string,
+        operationMutation:string,
+        mutations:(()=>string)[],
+        queries:(()=>string)[]
     }
 }
 

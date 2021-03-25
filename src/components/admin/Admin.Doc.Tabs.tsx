@@ -6,6 +6,8 @@ import Tab from 'template-core/Tab';
 import Typography from 'template-core/Typography';
 import Box from 'template-core/Box';
 
+
+
 interface TabPanelProps {
     children?: React.ReactNode;
     index: any;
@@ -48,7 +50,9 @@ const useStyles = makeStyles((theme: Theme) => ({
 }));
 export type Tab = {
     title: string,
-    Component: React.FunctionComponent
+    Component: React.FunctionComponent<any> | Function,
+    query?:string,
+    mutation?:string
 }
 export default function DocTabs(props: { tabs: Tab[] }) {
     const classes = useStyles();
@@ -57,8 +61,17 @@ export default function DocTabs(props: { tabs: Tab[] }) {
     const handleChange = (event: React.ChangeEvent<{}>, newValue: number) => {
         setActiveTab(newValue);
     };
-    
-    const TabsLabel = props.tabs.map(
+
+    const TabsLabel = props.tabs.sort(
+        (a, b) => {
+            if (a.title > b.title)
+                return 1
+            else if (a.title === b.title)
+                return 0
+            else
+                return -1
+        }
+    ).map(
         (tab, index) => {
             return (
                 <Tab label={tab.title} {...a11yProps(index)} />

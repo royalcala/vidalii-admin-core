@@ -1,18 +1,19 @@
+import React from 'react'
 import AccountIcon from 'template-icons/AccountCircleTwoTone';
-import DocHeader from "../admin/Admin.Doc.Header";
-import DocTabs, { Tab } from "../admin/Admin.Doc.Tabs";
-import DocFooter from "components/admin/Admin.Doc.Footer";
 import { Route } from 'components/routes/Routes.many.rcontext';
+import { Tab } from "../admin/Admin.Doc.Tabs";
+import { Doc } from "../admin/Admin.Doc_";
 
-const getContext = require.context(
+const getTabs = require.context(
     'components',
     true,
     /myAccount\.route\.tab\..+\.(tsx|js)$/
 )
 
-export const Tabs = getContext.keys().map(dir => {
-    return getContext(dir).default as Tab
+const Tabs = getTabs.keys().map(dir => {
+    return getTabs(dir).default as Tab
 })
+
 
 const route: Route = {
     name: 'MyAccount',
@@ -23,14 +24,20 @@ const route: Route = {
 }
 
 export default route
-function MyAccount() {
-    return (
-        <>
-            <DocHeader breadcrum={{ name: route.name, parent: route.parent, Icon: route.Icon }} />
-            <DocTabs tabs={Tabs} />
-            <DocFooter />
-        </>
-    )
-}
 
+const operationQuery = `#graphql
+query MyAccount
+`
+const operationMutation = `#graphql
+mutation MyAccount
+`
+
+function MyAccount() {
+    return <Doc
+        breadcrum={route}
+        tabs={Tabs}
+        operationQuery={operationQuery}
+        operationMutation={operationMutation}
+    />
+}
 

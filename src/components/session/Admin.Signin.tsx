@@ -12,7 +12,6 @@ import LockOutlinedIcon from 'template-icons/LockOutlined';
 import Typography from 'template-core/Typography';
 import { makeStyles } from 'template-core/styles';
 import Container from 'template-core/Container';
-import { Client } from "../..";
 import { useForm } from 'react-hook-form';
 
 

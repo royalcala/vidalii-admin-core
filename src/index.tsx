@@ -9,26 +9,29 @@ import {
 } from "react-router-dom";
 import { theme } from './components/theme';
 import UserSession from "./components/session/User.Session";
+import { GraphQLClient, ClientContext } from 'graphql-hooks'
+// import { GraphQLClient } from "graphql-request";
 
-import { GraphQLClient } from "graphql-request";
 
-const client = new GraphQLClient('http://localhost:4009/graphql')
-export const Client = React.createContext({
-  client
+// const client = new GraphQLClient('http://localhost:4009/graphql')
+// export const Client = React.createContext({
+//   client
+// })
+const client = new GraphQLClient({
+  url: '/graphql'
 })
+
 
 ReactDOM.render(
   <React.StrictMode>
     <Router>
-      <Client.Provider value={{
-        client
-      }}>
+      <ClientContext.Provider value={client}>
         <ThemeProvider theme={theme}>
           {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
           <CssBaseline />
           <UserSession/>
         </ThemeProvider>
-      </Client.Provider>
+      </ClientContext.Provider>
     </Router>
   </React.StrictMode >,
   document.getElementById('root')
