@@ -6,25 +6,21 @@ import DocFooter from "components/admin/Admin.Doc.Footer";
 interface Props {
     breadcrum: HeaderProps['breadcrum'],
     tabs: Tab[],
-    operationQuery: string,
-    operationMutation: string
 }
 
 export function Doc(props: Props) {
-    const mutations: (() => string)[] = []
-    const queries: (() => string)[] = []
+    //mutation is together, queries is for each tab,
+    //mutation params with reac-router-dom useParams() for get the id 
+    const mutation: HeaderProps['gql']['mutation'] = new Map()
     return (
         <>
             <DocHeader
                 breadcrum={props.breadcrum}
                 gql={{
-                    mutations,
-                    queries,
-                    operationMutation: props.operationMutation,
-                    operationQuery: props.operationQuery
+                    mutation
                 }}
             />
-            <DocTabs tabs={props.tabs} />
+            <DocTabs tabs={props.tabs} mutation={mutation} />
             <DocFooter />
         </>
     )

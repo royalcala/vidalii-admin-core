@@ -4,7 +4,7 @@ import Input from 'template-core/Input';
 import Button from 'template-core/Button';
 import InputLabel from 'template-core/InputLabel';
 import { createStyles, makeStyles, Theme } from 'template-core/styles';
-import { useForm, Controller, UseControllerOptions } from 'react-hook-form';
+import { useForm, Controller, UseControllerOptions, UseFormMethods } from 'react-hook-form';
 type FormConfig = {
     alias?: string //other name for the data
     type: 'string' | 'number' | 'email' | 'password' | 'autocompletes'//html5
@@ -18,7 +18,8 @@ export type FormProps = {
     },
     config: {
         [key: string]: FormConfig
-    }
+    },
+    control: UseFormMethods['control']
 
 }
 const useStyles = makeStyles((theme: Theme) =>
@@ -33,13 +34,12 @@ const useStyles = makeStyles((theme: Theme) =>
 );
 
 export function Form(props: FormProps) {
-  
-    const { handleSubmit, control, errors } = useForm<{}>();
-    const onSubmit = handleSubmit(
-      async (data) => {
-          //   await checkSession(username, password)
-          console.log(data)
-      });
+
+    // const onSubmit = handleSubmit(
+    //   async (data) => {
+    //       //   await checkSession(username, password)
+    //       console.log(data)
+    //   });
     const classes = useStyles()
     const Inputs = Object.entries(props.config).map(
         ([key, config]) => {
@@ -47,7 +47,7 @@ export function Form(props: FormProps) {
             return (
                 <Controller
                     name={key}
-                    control={control}
+                    control={props.control}
                     defaultValue={props.data[key]}
                     rules={config?.rules ? config.rules : {}}
                     render={({ onChange, value }) => <FormControl>
@@ -69,17 +69,12 @@ export function Form(props: FormProps) {
         }
     )
     return (
-        <form className={classes.root} noValidate autoComplete="off" onSubmit={onSubmit}>
+        <form
+            className={classes.root}
+            noValidate
+            autoComplete="off"
+        >
             {Inputs}
-            <Button
-                type="submit"
-                fullWidth
-                variant="contained"
-                color="primary"
-
-            >
-                submmit
-          </Button>
         </form>
     )
 }

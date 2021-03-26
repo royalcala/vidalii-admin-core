@@ -5,7 +5,7 @@ import Tabs from 'template-core/Tabs';
 import Tab from 'template-core/Tab';
 import Typography from 'template-core/Typography';
 import Box from 'template-core/Box';
-
+import type { Props as PropsHeader } from "./Admin.Doc.Header";
 
 
 interface TabPanelProps {
@@ -48,13 +48,16 @@ const useStyles = makeStyles((theme: Theme) => ({
         backgroundColor: theme.palette.background.paper,
     },
 }));
+export type PropsTab = {
+    mutation: PropsHeader['gql']['mutation']
+}
 export type Tab = {
     title: string,
-    Component: React.FunctionComponent<any> | Function,
-    query?:string,
-    mutation?:string
+    Component: Function
 }
-export default function DocTabs(props: { tabs: Tab[] }) {
+
+
+export default function DocTabs(props: { tabs: Tab[], mutation: PropsTab['mutation'] }) {
     const classes = useStyles();
     const [activeTab, setActiveTab] = React.useState(0);
 
@@ -82,7 +85,7 @@ export default function DocTabs(props: { tabs: Tab[] }) {
         (tab, index) => {
             return (
                 <TabPanel value={activeTab} index={index}>
-                    <tab.Component />
+                    <tab.Component mutation={props.mutation} />
                 </TabPanel>
             )
         }

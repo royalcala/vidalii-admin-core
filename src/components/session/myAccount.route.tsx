@@ -25,19 +25,11 @@ const route: Route = {
 
 export default route
 
-const operationQuery = `#graphql
-query MyAccount
-`
-const operationMutation = `#graphql
-mutation MyAccount
-`
 
 function MyAccount() {
     return <Doc
         breadcrum={route}
         tabs={Tabs}
-        operationQuery={operationQuery}
-        operationMutation={operationMutation}
     />
 }
 

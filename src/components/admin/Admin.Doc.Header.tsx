@@ -8,7 +8,8 @@ import Link from 'template-core/Link';
 import Typography from 'template-core/Typography';
 import Button from 'template-core/Button';
 import Workflow from "./Admin.Doc.Workflow";
-
+import { ClientContext } from "graphql-hooks";
+import { useLocation } from 'react-router-dom';
 const useStyles = makeStyles((theme: Theme) =>
     createStyles({
         root: {
@@ -39,17 +40,26 @@ export type Props = {
         parent: null | string,
         Icon: Function
     },
-    gql:{
-        operationQuery:string,
-        operationMutation:string,
-        mutations:(()=>string)[],
-        queries:(()=>string)[]
+    gql: {
+        mutation: Map<Symbol, () => string>,
     }
 }
 
 
-export default function DocHeader({ breadcrum }: Props) {
+export default function DocHeader({ breadcrum, gql }: Props) {
     const classes = useStyles();
+    const client = React.useContext(ClientContext)
+    let location = useLocation().pathname.replace('/', '_').replace('.', '_').replace('-', '_')
+    const saveDocOnClick = async () => {
+        let query = Array.from(gql.mutation.values()).map(
+            values => values()
+        ).join(' ')
+        query = `mutation ${location}{ ${query} }`
+        console.log({ query })
+        const response = await client.request({
+            query
+        })
+    }
 
     const SaveDoc = () => {
         return (
@@ -71,7 +81,10 @@ export default function DocHeader({ breadcrum }: Props) {
                     </Breadcrumbs>
                 </Box>
                 < Box m={1} >
-                    <Button variant="outlined" color="primary" className={classes.button}>
+                    <Button
+                        onClick={saveDocOnClick}
+                        variant="outlined" color="primary" className={classes.button}
+                    >
                         Save
                     </Button>
                     <Button color="secondary" className={classes.button}>
