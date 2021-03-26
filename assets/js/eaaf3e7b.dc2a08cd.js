@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[27],{98:function(a){a.exports=JSON.parse('{"allTagsPath":"/vidalii-admin-core/blog/tags","slug":"hola","name":"hola","count":1,"permalink":"/vidalii-admin-core/blog/tags/hola"}')}}]);

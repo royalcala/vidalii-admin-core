@@ -1,0 +1,1 @@
+(window.webpackJsonp=window.webpackJsonp||[]).push([[28],{99:function(e){e.exports=JSON.parse('{"title":"Recent posts","items":[{"title":"Welcome","permalink":"/vidalii-admin-core/blog/welcome"},{"title":"Hello","permalink":"/vidalii-admin-core/blog/hello-world"},{"title":"Hola","permalink":"/vidalii-admin-core/blog/hola"}]}')}}]);
